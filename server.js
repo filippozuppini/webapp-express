@@ -3,7 +3,11 @@ const express = require('express');
 const app = express()
 const port = process.env.API_SERVER_PORT || 3000;
 const connection = require("./database/connection.js");
+const moviesRouter = require("./routers/movies");
 
+
+
+app.use(express.static("public"));
 
 
 app.listen(port, () => {
@@ -14,3 +18,5 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
+
+app.use("api/movies", moviesRouter);
