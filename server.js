@@ -1,6 +1,10 @@
+require('dotenv').config();
 const express = require('express');
 const app = express()
 const port = process.env.API_SERVER_PORT || 3000;
+const connection = require("./database/connection.js");
+
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port http://localhost:${port}`)
