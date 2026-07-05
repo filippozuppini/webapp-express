@@ -3,10 +3,12 @@ const express = require('express');
 const app = express()
 const port = process.env.API_SERVER_PORT || 3000;
 const connection = require("./database/connection.js");
+const moviesRouter = require("./routes/movies");
 
 
 
 app.use(express.static("public"));
+app.use(express.json());
 
 
 app.listen(port, () => {
@@ -18,14 +20,6 @@ app.get('/', (req, res) => {
 })
 
 
-// Index Route
-app.get('/movies', (req,res) => {
-    res.send('Fetching all movies')
-})
-
-//Show Route
-app.get('/movies/:id', (req,res) => {
-    const id = parseInt(req.params);
-    res.send(`Fetching movies by ID: ${ID}`);
-})
+// Movies routes
+app.use('/movies', moviesRouter);
 
