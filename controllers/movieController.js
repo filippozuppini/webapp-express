@@ -18,7 +18,7 @@ const show = (req, res) => {
     const id = parseInt(req.params.id);
     const sql = "SELECT * FROM movies WHERE id = ?";
 
-    const reviewSql = "SELECT id, review, rating, name FROM reviews WHERE movie_id = ?";
+    const reviewSql = "SELECT name, vote, text FROM reviews WHERE movie_id = ?";
 
     connection.query(sql, [id], (err, results) => {
         if (err) {
@@ -30,10 +30,19 @@ const show = (req, res) => {
         }
 
         const movie = results[0];
-        
-        movie.reviews = reviewSql;
 
-        res.json(movie);
+        connection.query(reviewSql, [id], (err, reviews) => {
+            if (err) {
+                console.error("Error fetching reviews:", err);
+                return res.status(500).json({ error: true, message: "Internal server error" });
+            }
+            if (results.length === 0) {
+                return res.status(404).json({ error: true, message: "Movie not found" });
+            }
+
+            movie.reviews = reviews;
+            res.json(movie);
+        })
 
     });
 };
