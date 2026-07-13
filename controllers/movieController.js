@@ -47,4 +47,31 @@ const show = (req, res) => {
     });
 };
 
-module.exports = { index, show };
+
+// POST /movies/:id/reviews — salva una nuova recensione per un film
+const storeReview = (req, res) => {
+    const movieId = parseInt(req.params.id);
+    const { name, vote, text } = req.body;
+
+    const sql = "INSERT INTO reviews (movie_id, name, vote, text) VALUES (?, ?, ?, ?)";
+
+    connection.query(sql, [movieId, name, vote, text], (err, results) => {
+        if (err) {
+            console.error("Error creating review:", err);
+            return res
+                .status(500)
+                .json({ error: true, message: "Internal server error" });
+        }
+
+        res.status(201).json({
+            id: results.insertId,
+            movie_id: movieId,
+            name,
+            vote,
+            text,
+        });
+    });
+};
+
+
+module.exports = { index, show, storeReview };
